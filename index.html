@@ -10,13 +10,13 @@
     <h1>遗传</h1>
     <div id="main">
         <div class="method-list">
-            <h3>函数列表</h3>
+            <h3>函数列表:</h3>
             <ul class="clearfix">
                 <li :class="{active:item.isActive}" v-for="item in methodList" @click = 'getActiveMethod(item)'>{{item.name}}</li>
             </ul>
         </div>
         <div class="param-list">
-            <h3>参数列表</h3>
+            <h3>参数列表:</h3>
             <ul class="clearfix">
                 <li v-for="item in paramList">{{item.name}}:
                     <input type="text"
@@ -42,4 +42,5 @@
 </body>
 </html>
 <script src="node_modules/vue/dist/vue.js"></script>
+<script src="node_modules/echarts/dist/echarts.js"></script>
 <script src="js/index.js"></script>

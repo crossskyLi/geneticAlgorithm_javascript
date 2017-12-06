@@ -92,12 +92,13 @@ h1 {
 }
 
 ul {
-    width: 100%;
+    margin: 0 auto;
+    max-width: 1200px;
     min-height: 40px;
 }
 
 ul li {
-    min-width: 200px;
+    min-width: 240px;
     float: left;
     text-align: center;
     border: 1px solid skyblue;
@@ -117,7 +118,7 @@ ul li {
     padding: 0 0 0 5px;
 }
 .param-list ul li input {
-    width: 80px;
+    width: 100px;
     height: 30px;
     border-radius: 15px;
     line-height: 30px;
@@ -131,7 +132,6 @@ ul li {
     outline: none;
 }
 .btn-list{
-    width: 100%;
     text-align: center;
     height: 40px;
     line-height: 40px;
