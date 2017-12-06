@@ -8,31 +8,34 @@
 </head>
 <body>
     <h1>遗传</h1>
-    <div class="method-list">
-        <h3>函数列表</h3>
-        <ul>
-            <li>函数名字</li>
-            <li>函数名字</li>
-            <li>函数名字</li>
-            <li>函数名字</li>
-        </ul>
-    </div>
-    <div class="param-list">
-        <ul>
-            <li>参数名字:<input type="number"></li>
-            <li>参数名字:<input type="number"></li>
-            <li>参数名字:<input type="number"></li>
-        </ul>
-    </div>
-    <div class="chart-list">
-        <div class="chart">
-
+    <div id="main">
+        <div class="method-list">
+            <h3>函数列表</h3>
+            <ul class="clearfix">
+                <li :class="{active:item.isActive}" v-for="item in methodList" @click = 'getActiveMethod(item)'>{{item.name}}</li>
+            </ul>
         </div>
-        <div class="chart">
+        <div class="param-list">
+            <h3>参数列表</h3>
+            <ul class="clearfix">
+                <li v-for="item in paramList">{{item.name}}:<input type="text" v-model="item.value"></li>
+            </ul>
+        </div>
+        <div class="btn-list">
+            <button @click = 'calculate'> 点击计算 </button>
+            <button class="pink" @click = 'calculate'> 其他功能按钮 </button>
+            <button class="green"  @click='calculate'> 其他功能按钮</button>
+        </div>
+        <div class="chart-list">
+            <div class="chart">
 
+            </div>
+            <div class="chart">
+
+            </div>
         </div>
     </div>
 </body>
 </html>
-<script src="node_modules/jquery/dist/jquery.js"></script>
+<script src="node_modules/vue/dist/vue.js"></script>
 <script src="js/index.js"></script>
