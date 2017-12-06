@@ -18,7 +18,11 @@
         <div class="param-list">
             <h3>参数列表</h3>
             <ul class="clearfix">
-                <li v-for="item in paramList">{{item.name}}:<input type="text" v-model="item.value"></li>
+                <li v-for="item in paramList">{{item.name}}:
+                    <input type="text"
+                           v-model="item.value"
+                        placeholder="请输入xxx参数">
+                </li>
             </ul>
         </div>
         <div class="btn-list">
