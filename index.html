@@ -20,16 +20,27 @@
     <div class="param-list">
         <h3>参数列表:</h3>
         <ul class="clearfix">
-            <li v-for="item in paramList">{{item.name}}:
-                <input type="text"
-                       v-model="item.value"
-                       placeholder="请输入xxx参数">
+            <li>进化代数:<input type="number"
+                       v-model="maxgen"
+                       placeholder="请输入进化代数(大于0的整数)">
+            </li>
+            <li>种群数目:<input type="number"
+                       v-model="sizepop"
+                       placeholder="请输入种群数目">
+            </li>
+            <li>染色体长度:<input type="number"
+                       v-model="lenchrom"
+                       placeholder="请输入染色体长度">
+            </li>
+            <li>交叉概率pcross:<input type="number"
+                       v-model="pcross"
+                       placeholder="请输入交叉概率(0~1)">
             </li>
         </ul>
     </div>
     <div class="btn-list clearfix">
         <button @click='calculate'> 点击计算</button>
-        <button class="green" @click='calculate'> 其他功能按钮</button>
+        <!--<button class="green" @click='calculate'> 其他功能按钮</button>-->
     </div>
     <div class="result-box clearfix">
         <h1> 变化的代数结果</h1>
@@ -59,7 +70,7 @@
     var app = new Vue({
         el: '#main',
         data: {
-            sizepop: 10, //种群的数目
+            sizepop: 50, //种群的数目
             lenchrom: 5, //染色体长度
             bound_up: (0.9 * Math.PI), //上界
             bound_down: 0,// 下界

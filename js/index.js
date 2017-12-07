@@ -1,7 +1,7 @@
 var app = new Vue({
     el: '#main',
     data: {
-        sizepop: 10, //种群的数目
+        sizepop: 50, //种群的数目
         lenchrom: 5, //染色体长度
         bound_up: (0.9 * Math.PI), //上界
         bound_down: 0,// 下界
