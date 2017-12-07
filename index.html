@@ -204,7 +204,7 @@
                         pick = Math.random();
                     }
                     for (var n = 0; n < this.sizepop; n++) {
-                        console.log(n, 'select_fitness_prob', select_fitness_prob[n])
+//                        console.log(n, 'select_fitness_prob', select_fitness_prob[n])
                         pick = pick - select_fitness_prob[n];
                         if (pick <= 0) {
                             index[m] = n;
@@ -212,7 +212,7 @@
                         }
                     }
                 }
-                console.log(index)
+//                console.log(index)
 
 
                 for (var a = 0; a < this.sizepop; a++) {
