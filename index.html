@@ -29,11 +29,13 @@
     </div>
     <div class="btn-list clearfix">
         <button @click='calculate'> 点击计算</button>
-        <button class="pink" @click='showUnChange'> 显示全部对比</button>
         <button class="green" @click='calculate'> 其他功能按钮</button>
     </div>
     <div class="result-box clearfix">
         <h1> 变化的代数结果</h1>
+        <div class="btn-list" v-if="!isCalculating">
+            <button class="pink" @click='showUnChange'> {{showUnChangeBtnStr}}</button>
+        </div>
         <div class="result" v-for="(item,index) in contrastResults"
              :class="{active:item.isChange}"
              v-show="isUnChangeCanShow || item.isChange">
@@ -113,7 +115,9 @@
             contrastResults: [
                 {str: '', isChange: false}
             ],
-            isUnChangeCanShow: false
+            isCalculating:true,
+            isUnChangeCanShow: false,
+            showUnChangeBtnStr:'显示全部对比'
         },
         mounted: function () {
             this.activeMethod = this.methodList[0];
@@ -355,10 +359,14 @@
                 console.log("最优值在第几代取得", this.gbest_index);
                 console.log("此代的平均最优值", this.average_best[this.gbest_index]);
                 console.log("取得最优值的地方为", this.gbest_pos[0], this.gbest_pos[1], this.gbest_pos[2], this.gbest_pos[3], this.gbest_pos[4]);
+                this.isCalculating = false;
             },
             // 显示隐藏没有变化的对比
             showUnChange: function () {
-                this.isUnChangeCanShow = !this.isUnChangeCanShow
+                this.isUnChangeCanShow = !this.isUnChangeCanShow;
+                if( this.isUnChangeCanShow ){
+                   this.showUnChangeBtnStr =  '隐藏全部对比';
+                }
             }
         }
     })
