@@ -22,20 +22,28 @@ var app = new Vue({
                 method: function (arr) {
                     var firstXResult = -5;
                     var secondXResult = 1;
-                    arr.forEach(function (item, index) {
+                    arr.forEach(function (item) {
                         firstXResult = firstXResult * Math.sin(item);
                         secondXResult = secondXResult * Math.sin(5 * item);
                     });
-                    var result = parseFloat((firstXResult - secondXResult + 8).toFixed(6));
+                    var result = parseFloat(firstXResult - secondXResult + 8);
 //                        console.log('+++', result);
                     return result;
                 }
             },
             {
-                name: '目标函数名字2',
+                name: 'sin(x1)*sin(x2)*sin(x3)*sin(x4)*sin(x5) - sin(5*x1)*sin(5*x2)*sin(5*x3)*sin(5*x4)*sin(5*x5)',
                 isActive: false,
                 method: function () {
-                    return 2
+//                        var firstXResult = 1;
+//                        var secondXResult = 1;
+//                        arr.forEach(function (item, index) {
+//                            firstXResult = firstXResult * Math.sin(item);
+//                            secondXResult = secondXResult * Math.sin(5 * item);
+//                        });
+//                        var result = parseFloat((firstXResult - secondXResult).toFixed(6));
+////                        console.log('+++', result);
+//                        return result;
                 }
             }
         ],
@@ -47,9 +55,11 @@ var app = new Vue({
         ],
         //结果显示
         contrastResults: [
-            {str:'',isChange:false}
+            {str: '', isChange: false}
         ],
-        isUnChangeCanShow:false
+        isCalculating:true,
+        isUnChangeCanShow: false,
+        showUnChangeBtnStr:'显示全部对比'
     },
     mounted: function () {
         this.activeMethod = this.methodList[0];
@@ -96,11 +106,12 @@ var app = new Vue({
                 var arr = [];
                 for (var j = 0; j < this.lenchrom; j++) {
                     var value = parseFloat(this.bound_up * Math.random());
+//                        console.log("初始值", value, this.bound_up)
                     arr.push(value);
                 }
                 chrom.push(arr);
                 // 初始化适应度
-                fitness[i] = this.activeMethod.method(chrom[i])
+                fitness[i] = this.activeMethod.method(chrom[i]);
             }
             return {
                 chrom: chrom,
@@ -111,12 +122,10 @@ var app = new Vue({
         select: function (chrom, fitness, fitness_prob) {
             var selectChrom = chrom;
             var selectFitness = fitness;
-            var select_fitness_prob = fitness_prob
-            var index = [];
+            var select_fitness_prob = fitness_prob;
+            var index = new Array(this.sizepop);
             for (var i = 0; i < this.sizepop; i++) {
-                var arr = selectChrom[i];// 这里的arr????
-                // 求最小值,适应度为目标函数的倒数
-                // 即函数值越小,适应度越大,
+                var arr = selectChrom[i];
                 selectFitness[i] = 1 / (this.activeMethod.method(arr));
             }
             var sum_fitness = 0;
@@ -130,12 +139,14 @@ var app = new Vue({
             for (var l = 0; l < this.sizepop; l++) {
                 selectFitness[l] = 1 / selectFitness[l] // 恢复函数值
             }
+
             for (var m = 0; m < this.sizepop; m++) {
                 var pick = Math.random();
                 while (pick < 0.0001) {
                     pick = Math.random();
                 }
                 for (var n = 0; n < this.sizepop; n++) {
+//                        console.log(n, 'select_fitness_prob', select_fitness_prob[n])
                     pick = pick - select_fitness_prob[n];
                     if (pick <= 0) {
                         index[m] = n;
@@ -143,8 +154,12 @@ var app = new Vue({
                     }
                 }
             }
+//                console.log(index)
+
+
             for (var a = 0; a < this.sizepop; a++) {
                 for (var b = 0; b < this.lenchrom; b++) {
+//                        console.log(a, selectChrom[index[a]])
                     selectChrom[a][b] = selectChrom[index[a]][b];
                 }
                 this.fitness[a] = this.fitness[index[a]]
@@ -253,8 +268,9 @@ var app = new Vue({
                 // 选择
                 var selectChromInit = this.select(chrom, fitness, fitness_prob);// 选择
                 var selectChrom = selectChromInit.chrom;
-                var selectFitness = selectChromInit.fitness;
-                var select_fitness_prob = selectChromInit.select_fitness_prob;
+
+                fitness = selectChromInit.fitness;
+                fitness_prob = selectChromInit.fitness_prob;
                 // 交叉
                 var crossChrom = this.cross(selectChrom); // 交叉
                 //变异
@@ -268,7 +284,7 @@ var app = new Vue({
                 var new_best = arr[1];
                 var new_best_index = parseInt(arr[0]);
                 var isChange = false;
-                var str = '最优:    ' + this.gbest + '     新的最优:   ' + new_best ;
+                var str = '最优:    ' + this.gbest + '     新的最优:   ' + new_best;
                 if (new_best < this.gbest) {
                     this.gbest = new_best;
                     isChange = true;
@@ -278,17 +294,21 @@ var app = new Vue({
                     }
                     this.gbest_index = j + 1;
                 }
-                this.contrastResults.push({isChange:isChange,str:str})
+                this.contrastResults.push({isChange: isChange, str: str})
             }
             console.log("遗传算法次数", this.maxgen);
             console.log("最优值", this.gbest);
             console.log("最优值在第几代取得", this.gbest_index);
             console.log("此代的平均最优值", this.average_best[this.gbest_index]);
             console.log("取得最优值的地方为", this.gbest_pos[0], this.gbest_pos[1], this.gbest_pos[2], this.gbest_pos[3], this.gbest_pos[4]);
+            this.isCalculating = false;
         },
         // 显示隐藏没有变化的对比
-        showUnChange :function () {
-            this.isUnChangeCanShow = !this.isUnChangeCanShow
+        showUnChange: function () {
+            this.isUnChangeCanShow = !this.isUnChangeCanShow;
+            if( this.isUnChangeCanShow ){
+                this.showUnChangeBtnStr =  '隐藏全部对比';
+            }
         }
     }
 })

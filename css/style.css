@@ -110,6 +110,11 @@ ul li {
 }
 .method-list ul li{
     padding: 0 10px;
+    max-width: 100%;
+    overflow: hidden;
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    margin: 5px;
 }
 .method-list ul li.active {
     background: #1a90eb;
@@ -160,14 +165,12 @@ button.green {
     border: 1px solid #cccccc;
     border-radius: 10px;
     min-height: 100px;
-    padding: 10px;
+    margin: 10px;
 }
 .result{
     line-height: 30px;
     font-size: 16px;
     color: #1a90eb;
-    float: left;
-    width: 50%;
     text-align: center;
 }
 .result.active{
