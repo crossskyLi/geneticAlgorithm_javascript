@@ -108,7 +108,9 @@ ul li {
     line-height: 40px;
     font-size: 16px;
 }
-
+.method-list ul li{
+    padding: 0 10px;
+}
 .method-list ul li.active {
     background: #1a90eb;
     color: #fff;
@@ -133,8 +135,8 @@ ul li {
 }
 .btn-list{
     text-align: center;
-    height: 40px;
-    line-height: 40px;
+    height: 50px;
+    line-height: 50px;
 }
 .btn-list button{
     display: inline-block;
@@ -152,4 +154,22 @@ button.pink {
 }
 button.green {
     background: lightseagreen;
+}
+.result-box{
+    width: 100%;
+    border: 1px solid #cccccc;
+    border-radius: 10px;
+    min-height: 100px;
+    padding: 10px;
+}
+.result{
+    line-height: 30px;
+    font-size: 16px;
+    color: #1a90eb;
+    float: left;
+    width: 50%;
+    text-align: center;
+}
+.result.active{
+    color: lightcoral;
 }
