@@ -78,15 +78,17 @@
                     name: '-5*sin(x1)*sin(x2)*sin(x3)*sin(x4)*sin(x5) - sin(5*x1)*sin(5*x2)*sin(5*x3)*sin(5*x4)*sin(5*x5) + 8',
                     isActive: true,
                     method: function (arr) {
-                        var firstXResult = -5;
-                        var secondXResult = 1;
-                        arr.forEach(function (item) {
-                            firstXResult = firstXResult * Math.sin(item);
-                            secondXResult = secondXResult * Math.sin(5 * item);
-                        });
-                        var result = parseFloat(firstXResult - secondXResult + 8);
-//                        console.log('+++', result);
-                        return result;
+//                        var firstXResult = -5;
+//                        var secondXResult = 1;
+//                        arr.forEach(function (item) {
+//                            firstXResult = firstXResult * Math.sin(item);
+//                            secondXResult = secondXResult * Math.sin(5 * item);
+//                        });
+//                        var result = parseFloat(firstXResult - secondXResult + 8);
+////                        console.log('+++', result);
+//                        return result;
+                        return -5*Math.sin(arr[0])*Math.sin(arr[1])*Math.sin(arr[2])*Math.sin(arr[3])*Math.sin(arr[4])
+                            - Math.sin(5*arr[0])*Math.sin(5*arr[1])*Math.sin(5*arr[2])*Math.sin(5*arr[3])*Math.sin(5*arr[4]) + 8
                     }
                 },
                 {
