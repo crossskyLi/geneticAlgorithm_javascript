@@ -36,6 +36,10 @@
                                   v-model="pcross"
                                   placeholder="请输入交叉概率(0~1)">
             </li>
+            <li>变异概率pcross:<input type="number"
+                                  v-model="pmutation"
+                                  placeholder="请输入变异概率(0~1)">
+            </li>
         </ul>
     </div>
     <div class="btn-list clearfix">
@@ -164,7 +168,7 @@
                         saveAsImage: {show: true}
                     }
                 },
-                calculable: true,
+                calculable: false,
                 xAxis: [
                     {
                         type: 'category',
@@ -553,6 +557,7 @@
                 }
                 //进化开始
                 for (var j = 0; j < this.maxgen; j++) {
+
                     // 选择
                     var selectChromInit = this.select(chrom, fitness, fitness_prob);// 选择
                     var selectChrom = selectChromInit.chrom;
@@ -600,8 +605,8 @@
                 console.log("最优值", this.gbest);
                 console.log("最优值在第几代取得", this.gbest_index);
                 console.log("此代的平均最优值", this.average_best[this.gbest_index]);
-                console.log("取得最优值的地方为", this.gbest_pos[0], this.gbest_pos[1], this.gbest_pos[2], this.gbest_pos[3], this.gbest_pos[4]);
 
+                console.log("取得最优值的地方为", this.gbest_pos[0], this.gbest_pos[1], this.gbest_pos[2], this.gbest_pos[3], this.gbest_pos[4]);
 
                 this.drawChart();
 
