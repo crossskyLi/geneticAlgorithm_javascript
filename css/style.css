@@ -176,3 +176,22 @@ button.green {
 .result.active{
     color: lightcoral;
 }
+.chart{
+    float: left;
+    width: 50%;
+    width:-moz-calc(50% - (25px));
+    width:-webkit-calc(50% - (25px));
+    width: calc(50% - (25px));
+    margin:10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+}
+@media screen and (max-width: 1200px) {
+    .chart{
+        width: 100%;
+    }
+}
+#fitness,#param{
+    display: inline-block;
+}
