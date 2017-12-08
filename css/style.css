@@ -98,7 +98,7 @@ ul {
 }
 
 ul li {
-    min-width: 240px;
+    min-width: 280px;
     float: left;
     text-align: center;
     border: 1px solid skyblue;
@@ -115,6 +115,7 @@ ul li {
     -ms-text-overflow: ellipsis;
     text-overflow: ellipsis;
     margin: 5px;
+    transition: background 0.33s;
 }
 .method-list ul li.active {
     background: #1a90eb;
@@ -125,7 +126,7 @@ ul li {
     padding: 0 0 0 5px;
 }
 .param-list ul li input {
-    width: 100px;
+    width: 120px;
     height: 30px;
     border-radius: 15px;
     line-height: 30px;
@@ -137,6 +138,14 @@ ul li {
     font-size: 14px;
     display: inline-block;
     outline: none;
+    -webkit-transition: border-color 0.3s;
+    -moz-transition: border-color 0.3s;
+    -ms-transition: border-color 0.3s;
+    -o-transition: border-color 0.3s;
+    transition: border-color 0.3s;
+}
+.param-list ul li input:focus{
+    border-color: lightcoral;
 }
 .btn-list{
     text-align: center;
@@ -188,8 +197,31 @@ button.green {
     text-align: center;
 }
 @media screen and (max-width: 1200px) {
+    .result-box{
+        width: 98%;
+        margin: 0 auto;
+    }
     .chart{
+        width: 98%;
+        margin: 0 auto;
+    }
+}
+@media screen and (max-width: 800px) {
+    #main {
         width: 100%;
+    }
+    .param-list ul li{
+        width:-moz-calc(90% - (10px));
+        width:-webkit-calc(90% - (10px));
+        width: calc(90% - (10px));
+    }
+    .param-list ul li input{
+        width: 120px;
+    }
+    .method-list ul li{
+        padding: 0;
+        overflow: auto;
+        height: auto;
     }
 }
 #fitness,#param{

@@ -32,18 +32,27 @@
                              v-model="lenchrom"
                              placeholder="请输入染色体长度">
             </li>
-            <li>交叉概率pcross:<input type="number"
-                                  v-model="pcross"
-                                  placeholder="请输入交叉概率(0~1)">
+            <li>交叉概率:<input type="number"
+                            v-model="pcross"
+                            placeholder="请输入交叉概率(0~1)">
             </li>
-            <li>变异概率pcross:<input type="number"
-                                  v-model="pmutation"
-                                  placeholder="请输入变异概率(0~1)">
+            <li>变异概率:<input type="number"
+                            v-model="pmutation"
+                            placeholder="请输入变异概率(0~1)">
+            </li>
+            <li>上界:<input type="number"
+                          v-model="bound_up"
+                          placeholder="请输入上界">
+            </li>
+            <li>下界:<input type="number"
+                          v-model="bound_down"
+                          placeholder="请输入下界">
             </li>
         </ul>
     </div>
     <div class="btn-list clearfix">
-        <button @click='calculate'> 点击计算</button>
+        <button @click='calculate'> 计算结果</button>
+        <button @click='evolve'>演示进化</button>
         <!--<button class="green" @click='calculate'> 其他功能按钮</button>-->
     </div>
 
@@ -96,7 +105,7 @@
             gbestList: [], // 每一代最优值
             gBadList: [], //每一代的最差值
             gbest_pos: [],// 取最优值的位置
-
+            best_chrom_list: [], // 每一代的最优染色体数组
             //目标函数列表
             methodList: [
                 {
@@ -240,14 +249,14 @@
             },
             paramChartOptions: {
                 title: {
-                    text: '未来一周气温变化',
-                    subtext: '纯属虚构'
+                    text: '最优染色体'
+//                    subtext: '纯属虚构'
                 },
                 tooltip: {
                     trigger: 'axis'
                 },
                 legend: {
-                    data: ['最高气温', '最低气温']
+                    data: []
                 },
                 toolbox: {
                     show: true,
@@ -264,50 +273,18 @@
                     {
                         type: 'category',
                         boundaryGap: false,
-                        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                        data: []
                     }
                 ],
                 yAxis: [
                     {
                         type: 'value',
                         axisLabel: {
-                            formatter: '{value} °C'
+                            formatter: '{value}'
                         }
                     }
                 ],
-                series: [
-                    {
-                        name: '最高气温',
-                        type: 'line',
-                        data: [11, 11, 15, 13, 12, 13, 10],
-                        markPoint: {
-                            data: [
-                                {type: 'max', name: '最大值'},
-                                {type: 'min', name: '最小值'}
-                            ]
-                        },
-                        markLine: {
-                            data: [
-                                {type: 'average', name: '平均值'}
-                            ]
-                        }
-                    },
-                    {
-                        name: '最低气温',
-                        type: 'line',
-                        data: [1, -2, 2, 5, 3, 2, 0],
-                        markPoint: {
-                            data: [
-                                {name: '周最低', value: -2, xAxis: 1, yAxis: -1.5}
-                            ]
-                        },
-                        markLine: {
-                            data: [
-                                {type: 'average', name: '平均值'}
-                            ]
-                        }
-                    }
-                ]
+                series: []
             }
 
         },
@@ -350,7 +327,7 @@
             },
             //求最小值函数
             min: function (fitness) {
-
+                //console.log('fitness',fitness)
                 var min_fit = fitness[0];// double min_fit = *fitness;
                 var min_index = 0;
                 var arr = [0, 0];
@@ -441,11 +418,13 @@
                 for (var a = 0; a < this.sizepop; a++) {
                     for (var b = 0; b < this.lenchrom; b++) {
 //                        console.log(a, selectChrom[index[a]])
+//                        console.log('selectChrom1',selectChrom[a][b])
                         selectChrom[a][b] = selectChrom[index[a]][b];
+//                        console.log('selectChrom2',selectChrom[a][b])
                     }
-                    this.fitness[a] = this.fitness[index[a]]
+                    // 改这里
+                    selectFitness[a] = selectFitness[index[a]]
                 }
-
                 return {
                     chrom: selectChrom,
                     fitness: selectFitness,
@@ -527,15 +506,12 @@
             },
             //计算操作
             calculate: function () {
-                // 这三行看不懂
-                // time_t start,finish;
-                // start = clock(); // 程序开始计时
-                // srand((unsigned)time(NULL)); // 初始化随机数种子
                 this.contrastResults = [];
                 //初始化三个fitness chartLine
                 this.average_best = [];
                 this.gBadList = [];
                 this.gbestList = [];
+                this.best_chrom_list = [];
 
                 var init = this.init_chrom();
                 var chrom = init.chrom;
@@ -554,6 +530,8 @@
 
                 for (var i = 0; i < this.lenchrom; i++) {
                     this.gbest_pos[i] = parseFloat(chrom[best_index][i].toString());
+                    console.log('====', this.gbest_pos[i])
+                    console.log('=+++==', chrom[best_index])
                 }
                 //进化开始
                 for (var j = 0; j < this.maxgen; j++) {
@@ -578,8 +556,11 @@
                     this.average_best[j + 1] = sum_fit / this.sizepop;// 平均最优值
 
                     var arr = this.min(fitness); //最优值
-                    var new_best = arr[1];
+                    var new_best = arr[1];//这里去找
                     var new_best_index = parseInt(arr[0]);
+
+                    //每一代最优染色体记录
+                    this.best_chrom_list.push(chrom[new_best_index]);
 
                     var badArr = this.max(fitness); //最差值
                     var new_bad = badArr[1];
@@ -624,17 +605,74 @@
                 var _this = this;
                 _this.fitnessChartOptions.xAxis[0].data = [];//置空横轴
                 _this.paramChartOptions.xAxis[0].data = [];//置空横轴
+                //初始化横轴
                 this.average_best.forEach(function (t, index) {
                     var i = (index + 1).toString();
                     _this.fitnessChartOptions.xAxis[0].data.push(i);
                     _this.paramChartOptions.xAxis[0].data.push(i);
                 });
-                //画图
+                // 画图
+                // fitness图三条线绘制
                 this.fitnessChartOptions.series[0].data = this.average_best;
                 this.fitnessChartOptions.series[1].data = this.gbestList;
                 this.fitnessChartOptions.series[2].data = this.gBadList;
                 this.fitnessChart.setOption(this.fitnessChartOptions);
-                console.log(this.average_best);
+
+                // 最优染色体绘制
+                _this.paramChartOptions.legend.data = [];
+                _this.paramChartOptions.series = [];
+                for (var i = 0; i < this.lenchrom; i++) {
+                    var str = 'x' + (i + 1);
+                    _this.paramChartOptions.legend.data.push(str);//初始化曲线图的条数
+                    //初始化曲线图的每条曲线的数值
+                    _this.paramChartOptions.series.push(
+                        {
+                            name: str,
+                            type: 'line',
+                            data: [],
+//                            markLine: {
+//                                data: [
+//                                    {type: 'average', name: '平均值'}
+//                                ]
+//                            }
+                        }
+                    );
+                }
+                console.log(_this.paramChartOptions.series)
+                for (var j = 0; j < _this.best_chrom_list.length; j++) {
+//                    _this.paramChartOptions.series[i].data = []; // 置空每条曲线的值
+                    for (var i = 0; i < this.lenchrom; i++) {
+                        _this.paramChartOptions.series[i].data.push(_this.best_chrom_list[j][i]);
+//                        console.log(_this.best_chrom_list[j][i])
+                    }
+//                    console.log('-----------')
+                }
+                this.paramChart.setOption(this.paramChartOptions);
+                //console.log(this.average_best);
+            },
+            // 演示进化
+            evolve: function () {
+                var _this = this;
+                //初始化
+                var init = this.init_chrom();
+                var chrom = init.chrom;
+                var fitness = init.fitness;
+                var newChrom = JSON.parse(JSON.stringify(chrom));
+                console.log('初始化chrom', newChrom);
+                console.log('初始化fitness', fitness);
+                // 首轮选择结果
+
+                var fitness_prob = [];//每个种群被选择的概率
+                // 选择
+                var selectChromInit = _this.select(chrom, fitness, fitness_prob);// 选择
+                var selectChrom = selectChromInit.chrom;
+                fitness = selectChromInit.fitness;
+                fitness_prob = selectChromInit.fitness_prob;
+                console.log('select 后 fitness', fitness);
+                console.log('select 后 Chrom', selectChrom);
+                console.log('select 后 fitness_prob', fitness_prob);
+
+
             }
         }
     })
