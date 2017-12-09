@@ -87,7 +87,7 @@ h1 {
 }
 
 #main {
-    width: 80%;
+    width: 90%;
     margin: 0 auto;
 }
 
@@ -212,7 +212,6 @@ button.green {
     padding: 10px 0 30px 0 ;
     margin: 0 auto;
 }
-
 .evolve-process ol li.card{
     float: left;
     width: 46%;
@@ -236,7 +235,7 @@ button.green {
     background: lightcoral;
 }
 .evolve-process ol li:nth-child(3) h3{
-    background: lightgreen;
+    background: #ee3300;
 }
 .evolve-process ol li:nth-child(4) h3{
     background: lightseagreen;
@@ -252,6 +251,9 @@ button.green {
     border-radius: 0;
     width: 100%;
     min-height: 30px;
+}
+.evolve-process ol li ol:nth-last-of-type(2n){
+    background: #eee;
 }
 .evolve-process ol li ol li ol li{
     float: left !important;
@@ -270,7 +272,9 @@ button.green {
 .evolve-process ol li ol li ol li:last-child{
     border-right: none;
 }
-
+.evolve-process ol li ol li ol li.active{
+    color:red;
+}
 
 
 
@@ -283,9 +287,11 @@ button.green {
         width: 98%;
         margin: 0 auto;
     }
-    .evolve-process ol li{
-        width: 100%;
+    .evolve-process ol li.card{
+        width: 90%;
+        margin: 10px 5%;
     }
+
 }
 @media screen and (max-width: 800px) {
     #main {

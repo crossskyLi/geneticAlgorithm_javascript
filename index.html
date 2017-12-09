@@ -22,6 +22,7 @@
         <ul class="clearfix">
             <li>进化代数:<input type="number"
                             v-model="maxgen"
+                            :key-up = 'reset'
                             placeholder="请输入进化代数(大于0的整数)">
             </li>
             <li>种群数目:<input type="number"
@@ -51,7 +52,7 @@
         </ul>
     </div>
     <div class="btn-list clearfix">
-        <button @click='calculate'> 计算结果</button>
+        <button @click='calculate'>计算结果</button>
         <!--<button class="green" @click='calculate'> 其他功能按钮</button>-->
     </div>
 
@@ -79,14 +80,13 @@
         </div>
     </div>-->
     <div class="evolve-process-header btn-list ">
-        <button @click='evolve'>演示进化</button>
+        <button @click='evolve'>开始演化</button>
     </div>
     <div class="evolve-process">
         <div>
-            <h3>首轮演化</h3>
             <ol class="clearfix">
                 <li class="card">
-                    <h3>进化前</h3>
+                    <h3>进化前(step 1)</h3>
                     <ol>
                         <li>
                             <ol class="clearfix">
@@ -101,7 +101,7 @@
                     </ol>
                 </li>
                 <li class="card">
-                    <h3>选择后</h3>
+                    <h3>选择后(step 2)</h3>
                     <ol>
                         <li>
                             <ol class="clearfix">
@@ -109,14 +109,14 @@
                                 <li v-for="param in evolveParamList">{{param}}</li>
                             </ol>
                             <ol class="clearfix" v-for="(item,index) in firstEvolve.selectChrom">
-                                <li>{{index+1}}</li>
+                                <li>{{index+1}}</li> <!--:class="{active:firstEvolve.selectActiveList[index]}"-->
                                 <li v-for="param in item">{{param}}</li>
                             </ol>
                         </li>
                     </ol>
                 </li>
                 <li class="card">
-                    <h3>交叉后</h3>
+                    <h3>交叉后(step 3)</h3>
                     <ol>
                         <li>
                             <ol class="clearfix">
@@ -131,7 +131,7 @@
                     </ol>
                 </li>
                 <li class="card">
-                    <h3>变异后</h3>
+                    <h3>变异后(step 4)</h3>
                     <ol>
                         <li>
                             <ol class="clearfix">
@@ -147,84 +147,6 @@
                 </li>
             </ol>
         </div>
-        <div>
-            <h3>次轮演化</h3>
-            <ol class="clearfix">
-                <li class="card">
-                    <h3>进化前</h3>
-                    <ol>
-                        <li>
-                            <ol class="clearfix">
-                                <li>参数</li>
-                                <li v-for="param in evolveParamList">{{param}}</li>
-                            </ol>
-                            <ol class="clearfix" v-for="(item,index) in firstEvolve.startChrom">
-                                <li>{{index}}</li>
-                                <li v-for="param in item">{{param}}</li>
-                            </ol>
-                        </li>
-                    </ol>
-                </li>
-                <li class="card">
-                    <h3>选择后</h3>
-                    <ol>
-                        <li>
-                            <ol class="clearfix">
-                                <li>参数</li>
-                                <li v-for="param in evolveParamList">{{param}}</li>
-                            </ol>
-                            <ol class="clearfix">
-                                <li>1</li>
-                                <li>0.555555</li>
-                                <li>0.55555</li>
-                                <li>0.55555</li>
-                                <li>0.55555</li>
-                                <li>0.55555</li>
-                            </ol>
-                        </li>
-                    </ol>
-                </li>
-                <li class="card">
-                    <h3>交叉后</h3>
-                    <ol>
-                        <li>
-                            <ol class="clearfix">
-                                <li>参数</li>
-                                <li v-for="param in evolveParamList">{{param}}</li>
-                            </ol>
-                            <ol class="clearfix">
-                                <li>1</li>
-                                <li>0.555555</li>
-                                <li>0.55555</li>
-                                <li>0.55555</li>
-                                <li>0.55555</li>
-                                <li>0.55555</li>
-                            </ol>
-                        </li>
-                    </ol>
-                </li>
-                <li class="card">
-                    <h3>变异后</h3>
-                    <ol>
-                        <li>
-                            <ol class="clearfix">
-                                <li>参数</li>
-                                <li v-for="param in evolveParamList">{{param}}</li>
-                            </ol>
-                            <ol class="clearfix">
-                                <li>1</li>
-                                <li>0.555555</li>
-                                <li>0.55555</li>
-                                <li>0.55555</li>
-                                <li>0.55555</li>
-                                <li>0.55555</li>
-                            </ol>
-                        </li>
-                    </ol>
-                </li>
-            </ol>
-        </div>
-
     </div>
 </div>
 </body>
@@ -440,15 +362,10 @@
             evolveTimes: 0,
             firstEvolve: {
                 startChrom: [],
-                selectChrom:[],
-                crossChrom:[],
-                mutationChrom:[]
-            },
-            secondEvolve: {
-                startChrom: [],
-                selectChrom:[],
-                crossChrom:[],
-                mutationChrom:[]
+                selectChrom: [],
+//                selectActiveList: [],
+                crossChrom: [],
+                mutationChrom: []
             }
         },
         mounted: function () {
@@ -535,7 +452,6 @@
                     var arr = [];
                     for (var j = 0; j < this.lenchrom; j++) {
                         var value = parseFloat(this.bound_up * Math.random());
-//                        console.log("初始值", value, this.bound_up)
                         arr.push(value);
                     }
                     chrom.push(arr);
@@ -565,9 +481,15 @@
                 for (var k = 0; k < this.sizepop; k++) {
                     select_fitness_prob[k] = selectFitness[k] / sum_fitness;
                 }
+
                 for (var l = 0; l < this.sizepop; l++) {
                     selectFitness[l] = 1 / selectFitness[l] // 恢复函数值
                 }
+
+//                // 初始化选择记录是否活动
+//                for (var c = 0; c < this.sizepop; c++) {
+//                    this.pickSelectActiveItem(c, false)
+//                }
 
                 for (var m = 0; m < this.sizepop; m++) {
                     var pick = Math.random();
@@ -575,7 +497,6 @@
                         pick = Math.random();
                     }
                     for (var n = 0; n < this.sizepop; n++) {
-//                        console.log(n, 'select_fitness_prob', select_fitness_prob[n])
                         pick = pick - select_fitness_prob[n];
                         if (pick <= 0) {
                             index[m] = n;
@@ -583,17 +504,11 @@
                         }
                     }
                 }
-//                console.log(index)
-
 
                 for (var a = 0; a < this.sizepop; a++) {
                     for (var b = 0; b < this.lenchrom; b++) {
-//                        console.log(a, selectChrom[index[a]])
-//                        console.log('selectChrom1',selectChrom[a][b])
                         selectChrom[a][b] = selectChrom[index[a]][b];
-//                        console.log('selectChrom2',selectChrom[a][b])
                     }
-                    // 改这里
                     selectFitness[a] = selectFitness[index[a]]
                 }
                 return {
@@ -704,8 +619,6 @@
 
                 for (var i = 0; i < this.lenchrom; i++) {
                     this.gbest_pos[i] = parseFloat(chrom[best_index][i].toString());
-                    console.log('====', this.gbest_pos[i])
-                    console.log('=+++==', chrom[best_index])
                 }
                 //进化开始
                 for (var j = 0; j < this.maxgen; j++) {
@@ -749,7 +662,6 @@
                         this.gbest = new_best;
                         isChange = true;
                         for (var l = 0; l < this.lenchrom; l++) {
-//                            console.log(chrom[new_best_index][l])
                             this.gbest_pos[l] = parseFloat(chrom[new_best_index][l].toString());
                         }
                         this.gbest_index = j + 1;
@@ -803,26 +715,16 @@
                         {
                             name: str,
                             type: 'line',
-                            data: [],
-//                            markLine: {
-//                                data: [
-//                                    {type: 'average', name: '平均值'}
-//                                ]
-//                            }
+                            data: []
                         }
                     );
                 }
-                console.log(_this.paramChartOptions.series)
                 for (var j = 0; j < _this.best_chrom_list.length; j++) {
-//                    _this.paramChartOptions.series[i].data = []; // 置空每条曲线的值
                     for (var i = 0; i < this.lenchrom; i++) {
                         _this.paramChartOptions.series[i].data.push(_this.best_chrom_list[j][i]);
-//                        console.log(_this.best_chrom_list[j][i])
                     }
-//                    console.log('-----------')
                 }
                 this.paramChart.setOption(this.paramChartOptions);
-                //console.log(this.average_best);
             },
             // 演示进化
             evolve: function () {
@@ -839,8 +741,11 @@
                 var _this = this;
                 // 首轮选择结果
                 var fitness_prob = [];//每个种群被选择的概率
-                var selectChromInit ={};// 选择后结果
+                var selectChromInit = {};// 选择后结果
                 var selectChrom = []; //选择后结果
+                var crossChrom = [];
+                var newCrossChrom = [];
+                var mutationChrom = [];
                 //第一次初始化
                 if (!this.evolveTimes) {
                     var init = this.init_chrom();
@@ -852,38 +757,46 @@
 
                     // 选择
                     selectChromInit = _this.select(chrom, fitness, fitness_prob);
-                    var selectChrom = selectChromInit.chrom;
+                    selectChrom = selectChromInit.chrom;
                     this.firstEvolve.selectChrom = JSON.parse(JSON.stringify(selectChrom));
 
                     // 交叉
-                    var crossChrom = _this.cross(selectChrom);
-                    var newCrossChrom = JSON.parse(JSON.stringify(crossChrom));
+                    crossChrom = _this.cross(selectChrom);
+                    newCrossChrom = JSON.parse(JSON.stringify(crossChrom));
                     this.firstEvolve.crossChrom = JSON.parse(JSON.stringify(crossChrom));
                     //变异
-                    var mutationChrom = _this.mutation(newCrossChrom);
+                    mutationChrom = _this.mutation(newCrossChrom);
                     this.firstEvolve.mutationChrom = JSON.parse(JSON.stringify(mutationChrom));
                     this.evolveTimes++;
                     return;
                 }
-                chrom = this.firstEvolve.startChrom;
+
+                chrom = this.firstEvolve.mutationChrom;
 
                 //初始化
                 this.firstEvolve.startChrom = JSON.parse(JSON.stringify(chrom));
 
                 // 选择
                 selectChromInit = _this.select(chrom, fitness, fitness_prob);
-                var selectChrom = selectChromInit.chrom;
+                selectChrom = selectChromInit.chrom;
                 this.firstEvolve.selectChrom = JSON.parse(JSON.stringify(selectChrom));
 
                 // 交叉
-                var crossChrom = _this.cross(selectChrom);
-                var newCrossChrom = JSON.parse(JSON.stringify(crossChrom));
+                crossChrom = _this.cross(selectChrom);
+                newCrossChrom = JSON.parse(JSON.stringify(crossChrom));
                 this.firstEvolve.crossChrom = JSON.parse(JSON.stringify(crossChrom));
                 //变异
-                var mutationChrom = _this.mutation(newCrossChrom);
+                mutationChrom = _this.mutation(newCrossChrom);
                 this.firstEvolve.mutationChrom = JSON.parse(JSON.stringify(mutationChrom));
 
             }
+            // 标记选择后被操作过的记录
+//            pickSelectActiveItem: function (index, isActive) {
+//                this.firstEvolve.selectActiveList[index] = isActive;
+////                console.log(index,isActive);
+//                console.log(this.firstEvolve.selectActiveList);
+//
+//            }
         }
     })
 
