@@ -108,7 +108,8 @@ ul li {
     line-height: 40px;
     font-size: 16px;
 }
-.method-list ul li{
+
+.method-list ul li {
     padding: 0 10px;
     max-width: 100%;
     overflow: hidden;
@@ -117,14 +118,17 @@ ul li {
     margin: 5px;
     transition: background 0.33s;
 }
+
 .method-list ul li.active {
     background: #1a90eb;
     color: #fff;
 }
-.param-list ul li{
+
+.param-list ul li {
     text-align: left;
     padding: 0 0 0 5px;
 }
+
 .param-list ul li input {
     width: 120px;
     height: 30px;
@@ -133,7 +137,7 @@ ul li {
     border: 1px solid #ccc;
     padding: 0 15px;
     text-align: center;
-    margin: 4px 5px ;
+    margin: 4px 5px;
     float: right;
     font-size: 14px;
     display: inline-block;
@@ -144,15 +148,18 @@ ul li {
     -o-transition: border-color 0.3s;
     transition: border-color 0.3s;
 }
-.param-list ul li input:focus{
+
+.param-list ul li input:focus {
     border-color: lightcoral;
 }
-.btn-list{
+
+.btn-list {
     text-align: center;
     height: 50px;
     line-height: 50px;
 }
-.btn-list button{
+
+.btn-list button {
     display: inline-block;
     outline: none;
     min-width: 100px;
@@ -163,87 +170,120 @@ ul li {
     background: #1a90eb;
     margin: 5px;
 }
+
 button.pink {
     background: lightcoral;
 }
+
 button.green {
     background: lightseagreen;
 }
-.result-box{
+
+.btn-list button.step1 {
+    background: lightcoral;
+}
+
+.btn-list button.step2 {
+    background: #1a90eb;
+}
+
+.btn-list button.step3 {
+    background: lightseagreen;
+}
+
+.btn-list button.step4 {
+    background: black;
+}
+
+.result-box {
     width: 100%;
     border: 1px solid #cccccc;
     border-radius: 10px;
     min-height: 100px;
     margin: 10px;
 }
-.result{
+
+.result {
     line-height: 30px;
     font-size: 16px;
     color: #1a90eb;
     text-align: center;
 }
-.result.active{
+
+.result.active {
     color: lightcoral;
 }
-.chart{
+
+.chart {
     float: left;
     width: 50%;
-    width:-moz-calc(50% - (25px));
-    width:-webkit-calc(50% - (25px));
+    width: -moz-calc(50% - (25px));
+    width: -webkit-calc(50% - (25px));
     width: calc(50% - (25px));
-    margin:10px;
+    margin: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     text-align: center;
 }
 
-#fitness,#param{
+#fitness, #param {
     display: inline-block;
 }
-.evolve-process-header{
+
+.evolve-process-header {
     margin: 20px 0 0 0;
 }
-.evolve-process-header button{
+
+.evolve-process-header button {
     background: lightsalmon;
 }
+
 /*进化*/
-.evolve-process{
+.evolve-process {
     /*border-radius: 5px;*/
-    padding: 10px 0 30px 0 ;
+    padding: 10px 0 30px 0;
     margin: 0 auto;
 }
-.evolve-process ol li.card{
+
+.evolve-process ol li.card {
     float: left;
-    width: 46%;
+    width: 47%;
     border-radius: 8px;
     min-height: 300px;
     overflow: hidden;
     border: 1px solid #ccc;
-    margin:  10px 5px;
+    margin: 10px 5px;
 }
-.evolve-process ol li h3{
+
+.evolve-process ol li h3 {
     text-align: center;
     line-height: 40px;
-    height:40px;
+    height: 40px;
     background: #1a90eb;
     color: #fff;
 }
-.evolve-process ol li:nth-child(2n){
+
+.evolve-process ol li:nth-child(2n) {
     float: right;
 }
-.evolve-process ol li:nth-child(2) h3{
+
+.evolve-process ol li:nth-child(2) h3 {
     background: lightcoral;
 }
-.evolve-process ol li:nth-child(3) h3{
+
+.evolve-process ol li:nth-child(3) h3 {
     background: #ee3300;
 }
-.evolve-process ol li:nth-child(4) h3{
+
+.evolve-process ol li:nth-child(4) h3 {
     background: lightseagreen;
 }
-.evolve-process ol li ol{
+
+.evolve-process ol li ol {
     border-bottom: 1px solid #ccc;
 }
-.evolve-process ol li ol li{
+
+.evolve-process ol li ol li {
     margin: 0;
     border: none;
     line-height: 30px;
@@ -252,10 +292,12 @@ button.green {
     width: 100%;
     min-height: 30px;
 }
-.evolve-process ol li ol:nth-last-of-type(2n){
+
+.evolve-process ol li ol:nth-last-of-type(2n) {
     background: #eee;
 }
-.evolve-process ol li ol li ol li{
+
+.evolve-process ol li ol li ol li {
     float: left !important;
     border: none;
     width: 16.66%;
@@ -269,43 +311,49 @@ button.green {
     /*border-right: 1px solid #cccccc;*/
     /*border-bottom: 1px solid #cccccc;*/
 }
-.evolve-process ol li ol li ol li:last-child{
+
+.evolve-process ol li ol li ol li:last-child {
     border-right: none;
 }
-.evolve-process ol li ol li ol li.active{
-    color:red;
+
+.evolve-process ol li ol li ol li.active {
+    color: red;
 }
 
-
-
 @media screen and (max-width: 1200px) {
-    .result-box{
+    .result-box {
         width: 98%;
         margin: 0 auto;
     }
-    .chart{
+
+    .chart {
         width: 98%;
         margin: 0 auto;
     }
-    .evolve-process ol li.card{
+
+    .evolve-process ol li.card {
         width: 90%;
         margin: 10px 5%;
     }
 
 }
+
 @media screen and (max-width: 800px) {
     #main {
         width: 100%;
     }
-    .param-list ul li{
-        width:-moz-calc(90% - (10px));
-        width:-webkit-calc(90% - (10px));
+
+    .param-list ul li {
+        width: -moz-calc(90% - (10px));
+        width: -webkit-calc(90% - (10px));
         width: calc(90% - (10px));
     }
-    .param-list ul li input{
+
+    .param-list ul li input {
         width: 120px;
     }
-    .method-list ul li{
+
+    .method-list ul li {
         padding: 0;
         overflow: auto;
         height: auto;

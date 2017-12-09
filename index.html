@@ -22,7 +22,6 @@
         <ul class="clearfix">
             <li>进化代数:<input type="number"
                             v-model="maxgen"
-                            :key-up = 'reset'
                             placeholder="请输入进化代数(大于0的整数)">
             </li>
             <li>种群数目:<input type="number"
@@ -68,19 +67,28 @@
             </div>
         </div>
     </div>
-    <!--<div class="result-box clearfix">
-        <h1> 变化的代数结果</h1>
-        <div class="btn-list" v-if="!isCalculating">
-            <button class="pink" @click='showUnChange'> {{showUnChangeBtnStr}}</button>
-        </div>
-        <div class="result" v-for="(item,index) in contrastResults"
-             :class="{active:item.isChange}"
-             v-show="isUnChangeCanShow || item.isChange">
-            {{index+1}}、{{item.str}}
-        </div>
-    </div>-->
     <div class="evolve-process-header btn-list ">
-        <button @click='evolve'>开始演化</button>
+        <button class='step1'
+                @click='evolveStep1'
+                v-show="step==1 && evolveTimes == 0">初始化
+        </button>
+        <button class='step2'
+                @click='evolveStep2()'
+                v-show="step==2">开始选择
+        </button><!--firstEvolve.startChrom,firstEvolve.fitness,firstEvolve.fitness_prob-->
+        <button class='step3'
+                @click='evolveStep3()'
+                v-show="step==3">开始交叉
+        </button><!--firstEvolve.selectChrom-->
+        <button class='step4'
+                @click='evolveStep4()'
+                v-show="step==4">开始变异
+        </button><!--firstEvolve.crossChrom-->
+        <button class="step5"
+                v-show="step==5"
+                @click='evolveStep5()'>
+            下一代
+        </button>
     </div>
     <div class="evolve-process">
         <div>
@@ -100,7 +108,7 @@
                         </li>
                     </ol>
                 </li>
-                <li class="card">
+                <li v-show="step>=2" class="card">
                     <h3>选择后(step 2)</h3>
                     <ol>
                         <li>
@@ -115,7 +123,7 @@
                         </li>
                     </ol>
                 </li>
-                <li class="card">
+                <li v-show="step>=3" class="card">
                     <h3>交叉后(step 3)</h3>
                     <ol>
                         <li>
@@ -130,7 +138,7 @@
                         </li>
                     </ol>
                 </li>
-                <li class="card">
+                <li v-show="step>=4" class="card">
                     <h3>变异后(step 4)</h3>
                     <ol>
                         <li>
@@ -357,15 +365,17 @@
             },
 
             // 进化过程演示
+            step: 1, // 分为四步
             // 进化染色体参数个数
             evolveParamList: [],
             evolveTimes: 0,
             firstEvolve: {
                 startChrom: [],
                 selectChrom: [],
-//                selectActiveList: [],
+                fitness: [],
                 crossChrom: [],
-                mutationChrom: []
+                mutationChrom: [],
+                fitness_prob: []
             }
         },
         mounted: function () {
@@ -726,8 +736,8 @@
                 }
                 this.paramChart.setOption(this.paramChartOptions);
             },
-            // 演示进化
-            evolve: function () {
+            // 演示 第一步初始化
+            evolveStep1: function () {
                 //演示进化 参数个数初始化
                 this.evolveParamList = [];
                 var evolveParamStr = '';
@@ -735,68 +745,52 @@
                     evolveParamStr = 'x' + (i + 1);
                     this.evolveParamList.push(evolveParamStr)
                 }
-                // 如果是第一次演示,则初始化
-                var chrom = [];
-                var fitness = [];
-                var _this = this;
-                // 首轮选择结果
-                var fitness_prob = [];//每个种群被选择的概率
-                var selectChromInit = {};// 选择后结果
-                var selectChrom = []; //选择后结果
-                var crossChrom = [];
-                var newCrossChrom = [];
-                var mutationChrom = [];
+                this.step = 2;
                 //第一次初始化
-                if (!this.evolveTimes) {
-                    var init = this.init_chrom();
-                    chrom = init.chrom;
-                    fitness = init.fitness;
-
-                    //初始化
-                    this.firstEvolve.startChrom = JSON.parse(JSON.stringify(chrom));
-
-                    // 选择
-                    selectChromInit = _this.select(chrom, fitness, fitness_prob);
-                    selectChrom = selectChromInit.chrom;
-                    this.firstEvolve.selectChrom = JSON.parse(JSON.stringify(selectChrom));
-
-                    // 交叉
-                    crossChrom = _this.cross(selectChrom);
-                    newCrossChrom = JSON.parse(JSON.stringify(crossChrom));
-                    this.firstEvolve.crossChrom = JSON.parse(JSON.stringify(crossChrom));
-                    //变异
-                    mutationChrom = _this.mutation(newCrossChrom);
-                    this.firstEvolve.mutationChrom = JSON.parse(JSON.stringify(mutationChrom));
-                    this.evolveTimes++;
-                    return;
-                }
-
-                chrom = this.firstEvolve.mutationChrom;
-
+                var init = this.init_chrom();
+                var chrom = init.chrom;
+                this.firstEvolve.fitness = init.fitness;
                 //初始化
                 this.firstEvolve.startChrom = JSON.parse(JSON.stringify(chrom));
 
+            },
+            // 演示 第二步 选择
+            evolveStep2: function () {
                 // 选择
-                selectChromInit = _this.select(chrom, fitness, fitness_prob);
-                selectChrom = selectChromInit.chrom;
+                //chrom, fitness, fitness_prob
+                var chrom = JSON.parse(JSON.stringify(this.firstEvolve.startChrom));
+                var fitness = JSON.parse(JSON.stringify(this.firstEvolve.fitness));
+                var fitness_prob = [];
+
+                var selectChromInit = this.select(chrom, fitness, fitness_prob);
+                var selectChrom = JSON.parse(JSON.stringify(selectChromInit.chrom));
                 this.firstEvolve.selectChrom = JSON.parse(JSON.stringify(selectChrom));
-
+                this.firstEvolve.fitness_prob = JSON.parse(JSON.stringify(selectChromInit.fitness_prob));
+                this.firstEvolve.crossChrom = [];
+                this.step = 3
+            },
+            // 演示 第三步 交叉
+            evolveStep3: function () {
+                var selectChrom = JSON.parse(JSON.stringify(this.firstEvolve.selectChrom));
                 // 交叉
-                crossChrom = _this.cross(selectChrom);
-                newCrossChrom = JSON.parse(JSON.stringify(crossChrom));
+                var crossChrom = this.cross(selectChrom);
                 this.firstEvolve.crossChrom = JSON.parse(JSON.stringify(crossChrom));
-                //变异
-                mutationChrom = _this.mutation(newCrossChrom);
+                this.firstEvolve.mutationChrom = [];
+                this.step = 4
+            },
+            // 演示 第四步 变异
+            evolveStep4: function () {
+                var crossChrom = JSON.parse(JSON.stringify(this.firstEvolve.crossChrom));
+                var mutationChrom = this.mutation(crossChrom);
                 this.firstEvolve.mutationChrom = JSON.parse(JSON.stringify(mutationChrom));
-
+                this.step = 5;
+                this.evolveTimes++;
+            },
+            evolveStep5: function () {
+                this.step = 2;
+                this.firstEvolve.startChrom = JSON.parse(JSON.stringify(this.firstEvolve.mutationChrom));
+                this.firstEvolve.selectChrom = [];
             }
-            // 标记选择后被操作过的记录
-//            pickSelectActiveItem: function (index, isActive) {
-//                this.firstEvolve.selectActiveList[index] = isActive;
-////                console.log(index,isActive);
-//                console.log(this.firstEvolve.selectActiveList);
-//
-//            }
         }
     })
 
