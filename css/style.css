@@ -196,6 +196,84 @@ button.green {
     border-radius: 5px;
     text-align: center;
 }
+
+#fitness,#param{
+    display: inline-block;
+}
+.evolve-process-header{
+    margin: 20px 0 0 0;
+}
+.evolve-process-header button{
+    background: lightsalmon;
+}
+/*进化*/
+.evolve-process{
+    /*border-radius: 5px;*/
+    padding: 10px 0 30px 0 ;
+    margin: 0 auto;
+}
+
+.evolve-process ol li.card{
+    float: left;
+    width: 46%;
+    border-radius: 8px;
+    min-height: 300px;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    margin:  10px 5px;
+}
+.evolve-process ol li h3{
+    text-align: center;
+    line-height: 40px;
+    height:40px;
+    background: #1a90eb;
+    color: #fff;
+}
+.evolve-process ol li:nth-child(2n){
+    float: right;
+}
+.evolve-process ol li:nth-child(2) h3{
+    background: lightcoral;
+}
+.evolve-process ol li:nth-child(3) h3{
+    background: lightgreen;
+}
+.evolve-process ol li:nth-child(4) h3{
+    background: lightseagreen;
+}
+.evolve-process ol li ol{
+    border-bottom: 1px solid #ccc;
+}
+.evolve-process ol li ol li{
+    margin: 0;
+    border: none;
+    line-height: 30px;
+    height: auto;
+    border-radius: 0;
+    width: 100%;
+    min-height: 30px;
+}
+.evolve-process ol li ol li ol li{
+    float: left !important;
+    border: none;
+    width: 16.66%;
+    overflow: hidden;
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0;
+    min-height: 30px;
+    text-align: center;
+    /*border-right: 1px solid #cccccc;*/
+    /*border-bottom: 1px solid #cccccc;*/
+}
+.evolve-process ol li ol li ol li:last-child{
+    border-right: none;
+}
+
+
+
+
 @media screen and (max-width: 1200px) {
     .result-box{
         width: 98%;
@@ -204,6 +282,9 @@ button.green {
     .chart{
         width: 98%;
         margin: 0 auto;
+    }
+    .evolve-process ol li{
+        width: 100%;
     }
 }
 @media screen and (max-width: 800px) {
@@ -224,6 +305,16 @@ button.green {
         height: auto;
     }
 }
-#fitness,#param{
-    display: inline-block;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+

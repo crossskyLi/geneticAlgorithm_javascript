@@ -52,7 +52,6 @@
     </div>
     <div class="btn-list clearfix">
         <button @click='calculate'> 计算结果</button>
-        <button @click='evolve'>演示进化</button>
         <!--<button class="green" @click='calculate'> 其他功能按钮</button>-->
     </div>
 
@@ -68,7 +67,7 @@
             </div>
         </div>
     </div>
-    <div class="result-box clearfix">
+    <!--<div class="result-box clearfix">
         <h1> 变化的代数结果</h1>
         <div class="btn-list" v-if="!isCalculating">
             <button class="pink" @click='showUnChange'> {{showUnChangeBtnStr}}</button>
@@ -78,6 +77,154 @@
              v-show="isUnChangeCanShow || item.isChange">
             {{index+1}}、{{item.str}}
         </div>
+    </div>-->
+    <div class="evolve-process-header btn-list ">
+        <button @click='evolve'>演示进化</button>
+    </div>
+    <div class="evolve-process">
+        <div>
+            <h3>首轮演化</h3>
+            <ol class="clearfix">
+                <li class="card">
+                    <h3>进化前</h3>
+                    <ol>
+                        <li>
+                            <ol class="clearfix">
+                                <li>参数</li>
+                                <li v-for="param in evolveParamList">{{param}}</li>
+                            </ol>
+                            <ol class="clearfix" v-for="(item,index) in firstEvolve.startChrom">
+                                <li>{{index+1}}</li>
+                                <li v-for="param in item">{{param}}</li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+                <li class="card">
+                    <h3>选择后</h3>
+                    <ol>
+                        <li>
+                            <ol class="clearfix">
+                                <li>参数</li>
+                                <li v-for="param in evolveParamList">{{param}}</li>
+                            </ol>
+                            <ol class="clearfix" v-for="(item,index) in firstEvolve.selectChrom">
+                                <li>{{index+1}}</li>
+                                <li v-for="param in item">{{param}}</li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+                <li class="card">
+                    <h3>交叉后</h3>
+                    <ol>
+                        <li>
+                            <ol class="clearfix">
+                                <li>参数</li>
+                                <li v-for="param in evolveParamList">{{param}}</li>
+                            </ol>
+                            <ol class="clearfix" v-for="(item,index) in firstEvolve.crossChrom">
+                                <li>{{index+1}}</li>
+                                <li v-for="param in item">{{param}}</li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+                <li class="card">
+                    <h3>变异后</h3>
+                    <ol>
+                        <li>
+                            <ol class="clearfix">
+                                <li>参数</li>
+                                <li v-for="param in evolveParamList">{{param}}</li>
+                            </ol>
+                            <ol class="clearfix" v-for="(item,index) in firstEvolve.mutationChrom">
+                                <li>{{index+1}}</li>
+                                <li v-for="param in item">{{param}}</li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+            </ol>
+        </div>
+        <div>
+            <h3>次轮演化</h3>
+            <ol class="clearfix">
+                <li class="card">
+                    <h3>进化前</h3>
+                    <ol>
+                        <li>
+                            <ol class="clearfix">
+                                <li>参数</li>
+                                <li v-for="param in evolveParamList">{{param}}</li>
+                            </ol>
+                            <ol class="clearfix" v-for="(item,index) in firstEvolve.startChrom">
+                                <li>{{index}}</li>
+                                <li v-for="param in item">{{param}}</li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+                <li class="card">
+                    <h3>选择后</h3>
+                    <ol>
+                        <li>
+                            <ol class="clearfix">
+                                <li>参数</li>
+                                <li v-for="param in evolveParamList">{{param}}</li>
+                            </ol>
+                            <ol class="clearfix">
+                                <li>1</li>
+                                <li>0.555555</li>
+                                <li>0.55555</li>
+                                <li>0.55555</li>
+                                <li>0.55555</li>
+                                <li>0.55555</li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+                <li class="card">
+                    <h3>交叉后</h3>
+                    <ol>
+                        <li>
+                            <ol class="clearfix">
+                                <li>参数</li>
+                                <li v-for="param in evolveParamList">{{param}}</li>
+                            </ol>
+                            <ol class="clearfix">
+                                <li>1</li>
+                                <li>0.555555</li>
+                                <li>0.55555</li>
+                                <li>0.55555</li>
+                                <li>0.55555</li>
+                                <li>0.55555</li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+                <li class="card">
+                    <h3>变异后</h3>
+                    <ol>
+                        <li>
+                            <ol class="clearfix">
+                                <li>参数</li>
+                                <li v-for="param in evolveParamList">{{param}}</li>
+                            </ol>
+                            <ol class="clearfix">
+                                <li>1</li>
+                                <li>0.555555</li>
+                                <li>0.55555</li>
+                                <li>0.55555</li>
+                                <li>0.55555</li>
+                                <li>0.55555</li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+            </ol>
+        </div>
+
     </div>
 </div>
 </body>
@@ -285,8 +432,24 @@
                     }
                 ],
                 series: []
-            }
+            },
 
+            // 进化过程演示
+            // 进化染色体参数个数
+            evolveParamList: [],
+            evolveTimes: 0,
+            firstEvolve: {
+                startChrom: [],
+                selectChrom:[],
+                crossChrom:[],
+                mutationChrom:[]
+            },
+            secondEvolve: {
+                startChrom: [],
+                selectChrom:[],
+                crossChrom:[],
+                mutationChrom:[]
+            }
         },
         mounted: function () {
             this.activeMethod = this.methodList[0];
@@ -295,7 +458,7 @@
             this.fitnessChart = this.$echarts.init(fitnessChartDom);
             this.paramChart = this.$echarts.init(paramChartDom);
             this.fitnessChart.setOption(this.fitnessChartOptions);
-            this.paramChart.setOption(this.fitnessChartOptions);
+            this.paramChart.setOption(this.paramChartOptions);
             var _this = this;
             window.onresize = function (ev) {
                 var timer = null;
@@ -305,6 +468,14 @@
                     _this.paramChart.resize();
                     clearTimeout(timer)
                 }, 300);
+            };
+
+            //演示进化 参数个数初始化
+            this.evolveParamList = [];
+            var evolveParamStr = '';
+            for (var i = 0; i < this.lenchrom; i++) {
+                evolveParamStr = 'x' + (i + 1);
+                this.evolveParamList.push(evolveParamStr)
             }
         },
         methods: {
@@ -444,13 +615,15 @@
                     }
                     var flag = 0;
                     var pos = 0;
+                    var newPick = 0;
                     while (flag === 0) {
-                        var newPick = Math.random();
+                        newPick = Math.random();
                         pos = parseInt(newPick * this.lenchrom);
                         while (pos > this.lenchrom - 1) {
                             newPick = Math.random();
                             pos = parseInt(newPick * this.lenchrom);// 处理越界
                         }
+
 
                         // 交叉开始
                         var r = Math.random();
@@ -458,6 +631,7 @@
                         var v2 = crossChrom[choice2][pos];
                         crossChrom[choice1][pos] = r * v2 + (1 - r) * v1;
                         crossChrom[choice2][pos] = r * v1 + (1 - r) * v2; //交叉结束
+
                         if (crossChrom[choice1][pos] >= this.bound_down &&
                             crossChrom[choice1][pos] <= this.bound_up &&
                             crossChrom[choice2][pos] >= this.bound_down &&
@@ -652,26 +826,62 @@
             },
             // 演示进化
             evolve: function () {
+                //演示进化 参数个数初始化
+                this.evolveParamList = [];
+                var evolveParamStr = '';
+                for (var i = 0; i < this.lenchrom; i++) {
+                    evolveParamStr = 'x' + (i + 1);
+                    this.evolveParamList.push(evolveParamStr)
+                }
+                // 如果是第一次演示,则初始化
+                var chrom = [];
+                var fitness = [];
                 var _this = this;
-                //初始化
-                var init = this.init_chrom();
-                var chrom = init.chrom;
-                var fitness = init.fitness;
-                var newChrom = JSON.parse(JSON.stringify(chrom));
-                console.log('初始化chrom', newChrom);
-                console.log('初始化fitness', fitness);
                 // 首轮选择结果
-
                 var fitness_prob = [];//每个种群被选择的概率
-                // 选择
-                var selectChromInit = _this.select(chrom, fitness, fitness_prob);// 选择
-                var selectChrom = selectChromInit.chrom;
-                fitness = selectChromInit.fitness;
-                fitness_prob = selectChromInit.fitness_prob;
-                console.log('select 后 fitness', fitness);
-                console.log('select 后 Chrom', selectChrom);
-                console.log('select 后 fitness_prob', fitness_prob);
+                var selectChromInit ={};// 选择后结果
+                var selectChrom = []; //选择后结果
+                //第一次初始化
+                if (!this.evolveTimes) {
+                    var init = this.init_chrom();
+                    chrom = init.chrom;
+                    fitness = init.fitness;
 
+                    //初始化
+                    this.firstEvolve.startChrom = JSON.parse(JSON.stringify(chrom));
+
+                    // 选择
+                    selectChromInit = _this.select(chrom, fitness, fitness_prob);
+                    var selectChrom = selectChromInit.chrom;
+                    this.firstEvolve.selectChrom = JSON.parse(JSON.stringify(selectChrom));
+
+                    // 交叉
+                    var crossChrom = _this.cross(selectChrom);
+                    var newCrossChrom = JSON.parse(JSON.stringify(crossChrom));
+                    this.firstEvolve.crossChrom = JSON.parse(JSON.stringify(crossChrom));
+                    //变异
+                    var mutationChrom = _this.mutation(newCrossChrom);
+                    this.firstEvolve.mutationChrom = JSON.parse(JSON.stringify(mutationChrom));
+                    this.evolveTimes++;
+                    return;
+                }
+                chrom = this.firstEvolve.startChrom;
+
+                //初始化
+                this.firstEvolve.startChrom = JSON.parse(JSON.stringify(chrom));
+
+                // 选择
+                selectChromInit = _this.select(chrom, fitness, fitness_prob);
+                var selectChrom = selectChromInit.chrom;
+                this.firstEvolve.selectChrom = JSON.parse(JSON.stringify(selectChrom));
+
+                // 交叉
+                var crossChrom = _this.cross(selectChrom);
+                var newCrossChrom = JSON.parse(JSON.stringify(crossChrom));
+                this.firstEvolve.crossChrom = JSON.parse(JSON.stringify(crossChrom));
+                //变异
+                var mutationChrom = _this.mutation(newCrossChrom);
+                this.firstEvolve.mutationChrom = JSON.parse(JSON.stringify(mutationChrom));
 
             }
         }
