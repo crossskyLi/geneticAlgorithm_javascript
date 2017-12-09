@@ -297,6 +297,9 @@ button.green {
     background: #eee;
 }
 
+.evolve-process ol li ol:nth-last-of-type(2n-2){
+    color: #333;
+}
 .evolve-process ol li ol li ol li {
     float: left !important;
     border: none;
