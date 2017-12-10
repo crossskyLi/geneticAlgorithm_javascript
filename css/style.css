@@ -170,6 +170,16 @@ ul li {
     background: #1a90eb;
     margin: 5px;
 }
+button{
+    display: inline-block;
+    outline: none;
+    min-width: 100px;
+    border-radius: 5px;
+    border: none;
+    height: 40px;
+    color: #fff;
+    background: #1a90eb;
+}
 
 button.pink {
     background: lightcoral;
@@ -179,22 +189,27 @@ button.green {
     background: lightseagreen;
 }
 
-.btn-list button.step1 {
+button.step1 {
     background: lightcoral;
 }
 
-.btn-list button.step2 {
-    background: #1a90eb;
+button.step {
+    background: #fff;
+    color: #000;
 }
 
-.btn-list button.step3 {
-    background: lightseagreen;
+.card h3{
+    position: relative;
 }
-
-.btn-list button.step4 {
-    background: black;
+.card button{
+    height: 30px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 5px;
+    background: #fff;
+    color: #000;
 }
-
 .result-box {
     width: 100%;
     border: 1px solid #cccccc;
@@ -303,7 +318,7 @@ button.green {
 .evolve-process ol li ol li ol li {
     float: left !important;
     border: none;
-    width: 16.66%;
+    width: 14.28%;
     overflow: hidden;
     -ms-text-overflow: ellipsis;
     text-overflow: ellipsis;

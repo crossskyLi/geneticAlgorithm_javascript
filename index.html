@@ -72,18 +72,8 @@
                 @click='evolveStep1'
                 v-show="step==1 && evolveTimes == 0">初始化
         </button>
-        <button class='step2'
-                @click='evolveStep2()'
-                v-show="step==2">开始选择
-        </button><!--firstEvolve.startChrom,firstEvolve.fitness,firstEvolve.fitness_prob-->
-        <button class='step3'
-                @click='evolveStep3()'
-                v-show="step==3">开始交叉
-        </button><!--firstEvolve.selectChrom-->
-        <button class='step4'
-                @click='evolveStep4()'
-                v-show="step==4">开始变异
-        </button><!--firstEvolve.crossChrom-->
+        <!--firstEvolve.startChrom,firstEvolve.fitness,firstEvolve.fitness_prob-->
+
         <button class="step5"
                 v-show="step==5"
                 @click='evolveStep5()'>
@@ -100,55 +90,78 @@
                             <ol class="clearfix">
                                 <li>参数</li>
                                 <li v-for="param in evolveParamList">{{param}}</li>
+                                <li>fitness</li>
                             </ol>
                             <ol class="clearfix" v-for="(item,index) in firstEvolve.startChrom">
                                 <li>{{index+1}}</li>
                                 <li v-for="param in item">{{param}}</li>
+                                <li>{{firstEvolve.fitness[index]}}</li>
                             </ol>
                         </li>
                     </ol>
                 </li>
                 <li v-show="step>=2" class="card">
-                    <h3>选择后(step 2)</h3>
+                    <h3>选择后(step 2)
+                        <button class='step2'
+                                @click='evolveStep2()'
+                                v-show="step==2">开始选择
+                        </button>
+                    </h3>
                     <ol>
                         <li>
                             <ol class="clearfix">
                                 <li>参数</li>
                                 <li v-for="param in evolveParamList">{{param}}</li>
+                                <li>fitness</li>
                             </ol>
                             <ol class="clearfix" v-for="(item,index) in firstEvolve.selectChrom">
                                 <li>{{index+1}}</li> <!--:class="{active:firstEvolve.selectActiveList[index]}"-->
                                 <li v-for="param in item">{{param}}</li>
+                                <li>{{firstEvolve.selectFitness[index]}}</li>
                             </ol>
                         </li>
                     </ol>
                 </li>
                 <li v-show="step>=3" class="card">
-                    <h3>交叉后(step 3)</h3>
+                    <h3>交叉后(step 3)
+                        <button class='step3'
+                                @click='evolveStep3()'
+                                v-show="step==3">开始交叉
+                        </button><!--firstEvolve.selectChrom-->
+                    </h3>
                     <ol>
                         <li>
                             <ol class="clearfix">
                                 <li>参数</li>
                                 <li v-for="param in evolveParamList">{{param}}</li>
+                                <li>fitness</li>
                             </ol>
                             <ol class="clearfix" v-for="(item,index) in firstEvolve.crossChrom">
                                 <li>{{index+1}}</li>
                                 <li v-for="param in item">{{param}}</li>
+                                <li>{{firstEvolve.crossFitness[index]}}</li>
                             </ol>
                         </li>
                     </ol>
                 </li>
                 <li v-show="step>=4" class="card">
-                    <h3>变异后(step 4)</h3>
+                    <h3>变异后(step 4)
+                        <button class='step4'
+                                @click='evolveStep4()'
+                                v-show="step==4">开始变异
+                        </button><!--firstEvolve.crossChrom-->
+                    </h3>
                     <ol>
                         <li>
                             <ol class="clearfix">
                                 <li>参数</li>
                                 <li v-for="param in evolveParamList">{{param}}</li>
+                                <li>fitness</li>
                             </ol>
                             <ol class="clearfix" v-for="(item,index) in firstEvolve.mutationChrom">
                                 <li>{{index+1}}</li>
                                 <li v-for="param in item">{{param}}</li>
+                                <li>{{firstEvolve.mutationFitness[index]}}</li>
                             </ol>
                         </li>
                     </ol>
@@ -175,7 +188,7 @@
             fitness_prob: [],// 每个个体被选中的概率
             pcross: 0.6, // 交叉概率
             pmutation: 0.1,// 变异概率
-            maxgen: 500,// 进化代数
+            maxgen: 150,// 进化代数
             gbest: 0, // 所有进化中的最优值
             gbest_index: 0, // 取得最优值的迭代次数序号
             average_best: [], // 每一代平均最优值
@@ -371,10 +384,13 @@
             evolveTimes: 0,
             firstEvolve: {
                 startChrom: [],
-                selectChrom: [],
                 fitness: [],
+                selectChrom: [],
+                selectFitness:[],
                 crossChrom: [],
+                crossFitness:[],
                 mutationChrom: [],
+                mutationFitness:[],
                 fitness_prob: []
             }
         },
@@ -605,6 +621,7 @@
             },
             //计算操作
             calculate: function () {
+                this.sizepop = 50;
                 this.contrastResults = [];
                 //初始化三个fitness chartLine
                 this.average_best = [];
@@ -738,6 +755,7 @@
             },
             // 演示 第一步初始化
             evolveStep1: function () {
+                this.sizepop = 10;
                 //演示进化 参数个数初始化
                 this.evolveParamList = [];
                 var evolveParamStr = '';
@@ -756,6 +774,7 @@
             },
             // 演示 第二步 选择
             evolveStep2: function () {
+                this.sizepop = 10;
                 // 选择
                 //chrom, fitness, fitness_prob
                 var chrom = JSON.parse(JSON.stringify(this.firstEvolve.startChrom));
@@ -766,29 +785,52 @@
                 var selectChrom = JSON.parse(JSON.stringify(selectChromInit.chrom));
                 this.firstEvolve.selectChrom = JSON.parse(JSON.stringify(selectChrom));
                 this.firstEvolve.fitness_prob = JSON.parse(JSON.stringify(selectChromInit.fitness_prob));
+                var selectFitness = [];
+                for (var i = 0; i < this.sizepop; i++) {
+                    selectFitness[i] = this.activeMethod.method(chrom[i]);
+                }
+                this.firstEvolve.selectFitness = selectFitness;
                 this.firstEvolve.crossChrom = [];
                 this.step = 3
             },
             // 演示 第三步 交叉
             evolveStep3: function () {
+                this.sizepop = 10;
                 var selectChrom = JSON.parse(JSON.stringify(this.firstEvolve.selectChrom));
                 // 交叉
                 var crossChrom = this.cross(selectChrom);
                 this.firstEvolve.crossChrom = JSON.parse(JSON.stringify(crossChrom));
+                var crossFitness = [];
+                for (var i = 0; i < this.sizepop; i++) {
+                    crossFitness[i] = this.activeMethod.method(crossChrom[i]);
+                }
+                this.firstEvolve.crossFitness = crossFitness;
                 this.firstEvolve.mutationChrom = [];
                 this.step = 4
             },
             // 演示 第四步 变异
             evolveStep4: function () {
+                this.sizepop = 10;
                 var crossChrom = JSON.parse(JSON.stringify(this.firstEvolve.crossChrom));
                 var mutationChrom = this.mutation(crossChrom);
                 this.firstEvolve.mutationChrom = JSON.parse(JSON.stringify(mutationChrom));
+                var mutationFitness = [];
+                for (var i = 0; i < this.sizepop; i++) {
+                    mutationFitness[i] = this.activeMethod.method(mutationChrom[i]);
+                }
+                this.firstEvolve.mutationFitness = mutationFitness;
                 this.step = 5;
                 this.evolveTimes++;
             },
             evolveStep5: function () {
+                this.sizepop = 10;
                 this.step = 2;
                 this.firstEvolve.startChrom = JSON.parse(JSON.stringify(this.firstEvolve.mutationChrom));
+                var fitness = [];
+                for (var i = 0; i < this.sizepop; i++) {
+                    fitness[i] = this.activeMethod.method(this.firstEvolve.startChrom[i]);
+                }
+                this.firstEvolve.fitness = fitness;
                 this.firstEvolve.selectChrom = [];
             }
         }
