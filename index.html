@@ -172,8 +172,13 @@
 </div>
 </body>
 </html>
-<script src="node_modules/vue/dist/vue.js"></script>
-<script src="node_modules/echarts/dist/echarts.js"></script>
+<!-- 开发 -->
+<!--<script src="node_modules/vue/dist/vue.js"></script>-->
+<!--<script src="node_modules/echarts/dist/echarts.js"></script>-->
+
+<!-- 构建 -->
+<script src="node_modules/vue/dist/vue.min.js"></script>
+<script src="node_modules/echarts/dist/echarts.min.js"></script>
 <script>
     Vue.prototype.$echarts = echarts;
     var app = new Vue({
