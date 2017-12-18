@@ -155,7 +155,7 @@ ul li {
 
 .btn-list {
     text-align: center;
-    height: 50px;
+    /*height: 50px;*/
     line-height: 50px;
 }
 
@@ -244,7 +244,9 @@ button.step {
 #fitness, #param {
     display: inline-block;
 }
-
+.pie-chart{
+    height: 150px;
+}
 .evolve-process-header {
     margin: 20px 0 0 0;
 }

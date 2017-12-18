@@ -79,6 +79,9 @@
                 @click='evolveStep5()'>
             下一代
         </button>
+        <div class="pie-chart" v-if="step>1">
+            <div id="pie" :style="{'width': '100%', 'height':'100%'}"></div>
+        </div>
     </div>
     <div class="evolve-process">
         <div>
@@ -203,9 +206,21 @@
             best_chrom_list: [], // 每一代的最优染色体数组
             //目标函数列表
             methodList: [
+
+                {
+                    name: 'f1',
+                    isActive: false,
+                    lenchrom:2,
+                    method: function (arr) {
+                        var x = arr[0];
+                        var y = arr[1];
+                        return x+y;
+                    }
+                },
                 {
                     name: '-5*sin(x1)*sin(x2)*sin(x3)*sin(x4)*sin(x5) - sin(5*x1)*sin(5*x2)*sin(5*x3)*sin(5*x4)*sin(5*x5) + 8',
                     isActive: true,
+                    lenchrom:5,
                     method: function (arr) {
                         var firstXResult = -5;
                         var secondXResult = 1;
@@ -218,21 +233,6 @@
                         return result;
 //                        return -5 * Math.sin(arr[0]) * Math.sin(arr[1]) * Math.sin(arr[2]) * Math.sin(arr[3]) * Math.sin(arr[4])
 //                            - Math.sin(5 * arr[0]) * Math.sin(5 * arr[1]) * Math.sin(5 * arr[2]) * Math.sin(5 * arr[3]) * Math.sin(5 * arr[4]) + 8
-                    }
-                },
-                {
-                    name: '2的随机数',
-                    isActive: false,
-                    method: function () {
-//                        var firstXResult = 1;
-//                        var secondXResult = 1;
-//                        arr.forEach(function (item, index) {
-//                            firstXResult = firstXResult * Math.sin(item);
-//                            secondXResult = secondXResult * Math.sin(5 * item);
-//                        });
-//                        var result = parseFloat((firstXResult - secondXResult).toFixed(6));
-////                        console.log('+++', result);
-                        return 2 * Math.random();
                     }
                 }
             ],
@@ -381,7 +381,40 @@
                 ],
                 series: []
             },
-
+            selectPieChartOptions:{
+                title : {
+                    text: '选择过程图',
+                    x:'center'
+                },
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    type: 'scroll',
+                    orient: 'vertical',
+                    right: 10,
+                    top: 20,
+                    bottom: 20,
+                    data: [] // legendData
+                },
+                series : [
+                    {
+                        name: 'fitness',
+                        type: 'pie',
+                        radius : '55%',
+                        center: ['40%', '50%'],
+                        data: [],//seriesData
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            },
             // 进化过程演示
             step: 1, // 分为四步
             // 进化染色体参数个数
@@ -430,6 +463,7 @@
 
             // 选择目标函数
             getActiveMethod: function (item) {
+                this.lenchrom = item.lenchrom;
                 this.activeMethod = item;
                 this.methodList.forEach(function (t) {
                     t.isActive = false;
@@ -496,6 +530,7 @@
             },
             // 选择操作
             select: function (chrom, fitness, fitness_prob) {
+                var selectFitnessIndex = [];
                 var selectChrom = chrom;
                 var selectFitness = fitness;
                 var select_fitness_prob = fitness_prob;
@@ -540,12 +575,14 @@
                     for (var b = 0; b < this.lenchrom; b++) {
                         selectChrom[a][b] = selectChrom[index[a]][b];
                     }
-                    selectFitness[a] = selectFitness[index[a]]
+                    selectFitness[a] = selectFitness[index[a]];
+                    selectFitnessIndex.push(index[a]);
                 }
                 return {
                     chrom: selectChrom,
                     fitness: selectFitness,
                     fitness_prob: select_fitness_prob,
+                    selectFitnessIndex:selectFitnessIndex
                 };
             },
             //交叉操作
